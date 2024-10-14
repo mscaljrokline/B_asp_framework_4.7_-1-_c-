@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    var cl = "text-success";
+}
+
+<label>Cuenta:</label>
+<input type="text" value="@ViewBag.cuenta" /><br />
+<label>Nombre Cta:</label>
+<input type="text" value="@ViewBag.nombre" /><br />
+<label>Saldo:</label>
+<input type="text" value="@ViewBag.saldo" /><br />
+<label>Moneda:</label>
+<input type="text" value="@ViewBag.moneda" /><br />
+<table>
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Importe</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var mov in ViewBag.movs) {
+            string clclass = (mov.TIPO == "D") ? "text-danger" : "class2";
+        <tr>
+            <td>@mov.FECHA</td>
+
+            <td class="@clclass">
+                @if (mov.TIPO == "D")
+                {<b>-</b>}@mov.IMPORTE
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+

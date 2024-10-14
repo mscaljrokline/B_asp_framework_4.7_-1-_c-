@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<table>
+    <thead>
+        <tr>
+            <th>Tipo</th>
+            <th>Moneda</th>
+            <th>Cuenta</th>
+            <th>Titular</th>
+            <th>Saldo</th>
+            <th>Movimiento</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cuenta in ViewBag.cuentas){
+            <tr>
+                <td>@cuenta.TIPO</td>
+                <td>@cuenta.MONEDA</td>
+                <td>@cuenta.NRO_CUENTA2</td>
+                <td>@cuenta.NOMBRE</td>
+                <td>@cuenta.SALDO</td>
+                <td>
+                    <a href="/Movimiento/Recibe?NRO_CUENTA=@cuenta.NRO_CUENTA&NRO_CUENTA2=@cuenta.NRO_CUENTA2&MONEDA=@cuenta.MONEDA&NOMBRE=@cuenta.NOMBRE&SALDO=@cuenta.SALDO"><img src="~/images/mov.jpg"/></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

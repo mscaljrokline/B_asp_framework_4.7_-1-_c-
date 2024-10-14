@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@model OPERACION_AMHCH_5_OK.Models.Cuenta
+@ViewBag.men
+<form action="/Home/GuardarCuenta" method="post">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-6">
+
+                <label>Numero: </label>
+            </div>
+            <div class="col-12 col-sm-6">
+                @Html.TextBoxFor(m => m.NRO_CUENTA, new { @maxlength = "14", @id = "nro" })
+                <span asp-validation-for="NRO_CUENTA" class="text-danger">@Html.ValidationMessageFor(model => model.NRO_CUENTA)</span>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <label>Moneda: </label>
+            </div>
+            <div class="col-12 col-sm-6">
+                <select name="MONEDA">
+                    <option value="BOL">
+                        Bolivianos
+                    </option>
+                    <option value="DOL">
+                        Dolares
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <label>Nombre:</label>
+            </div>
+            <div class="col-12 col-sm-6">
+                @Html.TextBoxFor(m => m.NOMBRE, new { @maxlength = "40", @id = "nombre" })
+                <span asp-validation-for="NOMBRE" class="text-danger">@Html.ValidationMessageFor(m => m.NOMBRE)</span>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <p align="right">
+        <button type="submit"><img src="~/images/guardar.jpg" loading="lazy">Aceptar</button>
+        <button type="submit"><img src="~/images/cancelar.jpg" loading="lazy">Cancelar</button>
+    </p>
+</form>

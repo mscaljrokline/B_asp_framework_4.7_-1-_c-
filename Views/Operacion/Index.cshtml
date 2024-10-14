@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Cuenta</h2>
+@ViewBag.error
+<hr />
+<form action="/Operacion/Operar" method="post"> 
+    <label>Cuenta:</label>
+    <select name="CUENTA">
+        @foreach (var cuenta in ViewBag.cuentas)
+        {
+            <option value="@cuenta.NRO_CUENTA">@cuenta.NRO_CUENTA2</option>
+        }
+    </select>
+    <br />
+    <label>Monto:</label>
+    <input type="text" name="MONTO" value="@ViewBag.monto"/>
+    <span class="text-danger">@ViewBag.errormonto</span>
+    <br />
+    <p align="right">
+        <button type="submit" name="accion" value="deposito">Deposito</button>
+        <button type="submit" name="accion" value="retiro">Retiro</button>
+
+    </p>
+</form>
+
