@@ -1,0 +1,177 @@
+Create database practica1
+use practica1
+go
+
+create table usuario(
+id_usuario int primary key identity,
+correo varchar(20),
+contraseña varchar(30)
+)
+go
+create table CUENTA(
+NRO_CUENTA nvarchar(14) primary key,
+TIPO Char(3),
+MONEDA Char(3),
+NOMBRE nvarchar(40),
+SALDO Decimal(12,2)
+)
+go
+create table MOVIMIENTO(
+NRO_CUENTA nvarchar(14) references CUENTA(NRO_CUENTA),
+FECHA Datetime,
+TIPO Char(1),
+IMPORTE Decimal(12,2),
+primary key(NRO_CUENTA,FECHA)
+)
+go
+
+
+use practica6
+insert into usuario(correo,password) values('a@gmail.com','1234')
+go
+
+CREATE PROC proc_guardar_cuenta(
+@nro_cuenta nvarchar(14),
+@tipo char(3),
+@moneda char(3),
+@nombre nvarchar(40),
+@saldo Decimal(12,2),
+@Resultado int output,
+@Mensaje varchar(500) output
+
+)as
+begin
+	SET @Resultado = 0
+	IF NOT EXISTS (SELECT * FROM CUENTA WHERE NRO_CUENTA = @nro_cuenta)
+	begin
+		insert into CUENTA(NRO_CUENTA,TIPO,MONEDA,NOMBRE,SALDO) values(@nro_cuenta,@tipo,@moneda,@nombre,@saldo)
+		set @Resultado = 1
+
+	end
+	ELSE
+		set @Mensaje = 'No se puede repetir el nro de cuenta'
+	
+end
+
+
+go
+
+
+create PROC pro_listar_cuenta
+  as
+ begin
+
+
+   select *
+ from CUENTA
+ end
+
+ go
+
+create PROC pro_listar_mov(
+@nro_cuenta nvarchar(14)
+)as
+ begin
+
+
+   select *
+ from MOVIMIENTO
+ where NRO_CUENTA=@nro_cuenta
+ end
+
+ go
+
+
+
+create PROC pro_deposito_cuenta(
+@nro_cuenta nvarchar(14),
+@monto Decimal(12,2),
+@fecha Datetime
+)as
+begin
+	
+	
+		update CUENTA set
+		SALDO = SALDO+@monto
+		where NRO_CUENTA = @nro_cuenta
+                
+                insert into MOVIMIENTO(NRO_CUENTA,FECHA,TIPO,IMPORTE) values(@nro_cuenta,@fecha,'A',@monto)
+                
+	
+end
+
+GO
+
+create PROC pro_retiro_cuenta(
+@nro_cuenta nvarchar(14),
+@monto Decimal(12,2),
+@fecha Datetime,
+@sw int output
+)as
+begin
+	set @sw=0
+	declare @ver Decimal(12,2)
+    select @ver=SALDO FROM CUENTA WHERE NRO_CUENTA=@nro_cuenta
+    if(@ver>=@monto)
+	begin
+		update CUENTA set
+		SALDO = SALDO-@monto
+		where NRO_CUENTA = @nro_cuenta
+
+                insert into MOVIMIENTO(NRO_CUENTA,FECHA,TIPO,IMPORTE) values(@nro_cuenta,@fecha,'D',@monto)
+                set @sw=1 
+
+ 
+	end
+end
+GO
+
+create PROC pro_obt_saldo(
+@nro_cuenta nvarchar(14),
+@saldo Decimal(12,2) output
+)as
+begin
+
+		select @saldo=SALDO
+                from CUENTA
+		where NRO_CUENTA = @nro_cuenta
+end
+
+//si o si da ojala
+create PROC pro_obt_saldo(
+@nro_cuenta nvarchar(14),
+)as
+begin
+
+		select SALDO
+                from CUENTA
+		where NRO_CUENTA = @nro_cuenta
+                
+	
+end
+
+create PROC pro_transf_cuenta(
+@nro_o nvarchar(14),
+@nro_d nvarchar(14),
+@monto Decimal(12,2),
+@fecha Datetime,
+@sw int output
+)as
+begin
+	        set @sw=0
+		update CUENTA set
+		SALDO = SALDO-@monto
+		where NRO_CUENTA = @nro_o
+
+                insert into MOVIMIENTO(NRO_CUENTA,FECHA,TIPO,IMPORTE) values(@nro_o,@fecha,'D',@monto)	
+
+		update CUENTA set
+		SALDO = SALDO+@monto
+		where NRO_CUENTA = @nro_d
+
+                insert into MOVIMIENTO(NRO_CUENTA,FECHA,TIPO,IMPORTE) values(@nro_d,@fecha,'A',@monto)
+                set @sw=1 
+
+
+
+end
